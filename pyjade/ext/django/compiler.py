@@ -79,13 +79,13 @@ except ImportError:
     from django.utils.encoding import force_unicode as to_text
 
 def decorate_templatize(func):
-    def templatize(src, origin=None):
-        src = to_text(src, settings.FILE_CHARSET)
+    def templatize(src, origin=None, **kwargs):
+        src = to_text(src, kwargs.get('charset', settings.FILE_CHARSET))
         if origin.endswith(".jade"):
             html = process(src,compiler=Compiler)
         else:
             html = src
-        return func(html, origin)
+        return func(html, origin, **kwargs)
 
     return templatize
 try:
